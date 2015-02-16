@@ -11,7 +11,7 @@
 
 
 # ---------------------------------------------------------------------------
-# Copyright (c) 2011-2014, Jason M. Wood <sandain@hotmail.com>
+# Copyright (c) 2011-2015, Jason M. Wood <sandain@hotmail.com>
 #
 # All rights reserved.
 #
@@ -340,7 +340,7 @@ execute() {
 getJavaPID() {
   local PID
   PID=$(
-    ps -a -u $USER_NAME -o pid,comm,args |
+    ps -a -U $USER_NAME -o pid,comm,args |
     $PERL -ne 'if ($_ =~ /^\s*(\d+)\s+java.+mscs-world='$1'$/) { print $1; }'
   )
   printf "%d\n" $PID
@@ -1594,8 +1594,10 @@ worldStatus() {
         done
         printf "    Players: %s.\n" "$PLAYERS"
       fi
-    else
+    elif [ "$(getPropertiesValue $1 'enable-query')" = "true" ]; then
       printf "running (query server offline).\n"
+    else
+      printf "running.\n"
     fi
     printf "    Process ID: %d.\n" $(getJavaPID "$1")
   else
